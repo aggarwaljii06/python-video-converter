@@ -1,0 +1,88 @@
+# Function to create a scene with a colored background, overlay text, and watermark.
+def create_scene(bg_color, text_lines, duration, fontsize=50, text_color='white', watermark_text="Shree Jay Durgee Builders"):
+    # Create a background color clip
+    bg_clip = ColorClip(size=(1920, 1080), color=bg_color, duration=duration)
+    
+    # Create watermark clip; placed at bottom-right with a small margin.
+    watermark = (TextClip(watermark_text, fontsize=30, color="white", font="Amiri-Bold")
+                 .set_duration(duration)
+                 .set_position(("right", "bottom")))
+    
+    # Create text overlay clips for the scene's main message.
+    text_clips = []
+    num_lines = len(text_lines)
+    for i, line in enumerate(text_lines):
+        txt_clip = (TextClip(line, fontsize=fontsize, color=text_color, font="Amiri-Bold")
+                    .set_duration(duration)
+                    .set_position(("center", 1080/2 - (num_lines*fontsize)/2 + i*fontsize)))
+        text_clips.append(txt_clip)
+    
+    # Composite background, text overlays, and watermark
+    composite = CompositeVideoClip([bg_clip] + text_clips + [watermark])
+    return composite.set_duration(duration)
+
+# Define scene durations in seconds
+scene1_duration = 5
+scene2_duration = 5
+scene3_duration = 10
+scene4_duration = 8
+scene5_duration = 2
+
+# Create each scene with the watermark
+
+# Scene 1: Foundation of Dreams
+scene1 = create_scene(
+    bg_color=(70, 130, 180),  # Steel blue background (placeholder for morning construction site)
+    text_lines=["Every dream begins", "with a strong foundation..."],
+    duration=scene1_duration,
+    fontsize=60
+)
+
+# Scene 2: Trust in Construction
+scene2 = create_scene(
+    bg_color=(34, 139, 34),  # Forest green (placeholder for busy construction scene)
+    text_lines=["India’s No.1 Cement", "- Trusted by Millions"],
+    duration=scene2_duration,
+    fontsize=60
+)
+
+# Scene 3: Enduring Strength
+scene3 = create_scene(
+    bg_color=(105, 105, 105),  # Dim gray (placeholder for dramatic rain & wind)
+    text_lines=["Engineered for Durability", "Built for Life"],
+    duration=scene3_duration,
+    fontsize=60
+)
+
+# Scene 4: Dream Home Realized
+scene4 = create_scene(
+    bg_color=(255, 215, 0),  # Gold (placeholder for a bright, fulfilling scene)
+    text_lines=["The Engineer’s Choice"],
+    duration=scene4_duration,
+    fontsize=60
+)
+
+# Scene 5: Brand Identity & Tagline
+scene5 = create_scene(
+    bg_color=(0, 0, 0),  # Black background for logo display
+    text_lines=["Ultratech Cement", "The Leader. The Choice."],
+    duration=scene5_duration,
+    fontsize=70
+)
+
+# Function to add fade-in and fade-out effects to a clip.
+def add_fade(clip, fade_duration=0.5):
+    return clip.fx(vfx.fadein, fade_duration).fx(vfx.fadeout, fade_duration)
+
+# Apply fade effects to each scene
+scene1 = add_fade(scene1)
+scene2 = add_fade(scene2)
+scene3 = add_fade(scene3)
+scene4 = add_fade(scene4)
+scene5 = add_fade(scene5)
+
+# Concatenate all scenes to create the final video
+final_video = concatenate_videoclips([scene1, scene2, scene3, scene4, scene5], method="compose")
+
+# Write the final video to a file
+final_video.write_videofile("ultratech_ad.mp4", fps=24)
